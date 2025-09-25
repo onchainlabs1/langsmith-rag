@@ -1,26 +1,26 @@
-# 🚀 Configuração Groq + LangSmith para EU AI Act Compliance
+# 🚀 Groq + LangSmith Setup for EU AI Act Compliance
 
-## Visão Geral
+## Overview
 
-Este guia mostra como configurar o Groq com LangSmith para o seu sistema RAG de conformidade com o EU AI Act. O Groq oferece inferência ultra-rápida e custo-benefício excelente para aplicações de compliance.
+This guide shows how to configure Groq with LangSmith for your EU AI Act compliance RAG system. Groq offers ultra-fast inference and excellent cost-benefit for compliance applications.
 
-## 🔑 Configuração das Chaves API
+## 🔑 API Key Configuration
 
-### 1. **Obter Chave do Groq**
+### 1. **Get Groq Key**
 
-1. Acesse [Groq Console](https://console.groq.com/keys)
-2. Faça login com sua conta (ou crie uma)
-3. Clique em "Create API Key"
-4. Copie a chave (começa com `gsk_...`)
+1. Visit [Groq Console](https://console.groq.com/keys)
+2. Login with your account (or create one)
+3. Click "Create API Key"
+4. Copy the key (starts with `gsk_...`)
 
-### 2. **Obter Chave do LangSmith**
+### 2. **Get LangSmith Key**
 
-1. Acesse [LangSmith](https://smith.langchain.com/)
-2. Faça login com sua conta GitHub (já associada)
-3. Vá em Settings > API Keys
-4. Copie a chave (começa com `ls__...`)
+1. Visit [LangSmith](https://smith.langchain.com/)
+2. Login with your GitHub account (already associated)
+3. Go to Settings > API Keys
+4. Copy the key (starts with `ls__...`)
 
-### 3. **Configurar Variáveis de Ambiente**
+### 3. **Configure Environment Variables**
 
 ```bash
 # Groq API Key
@@ -29,171 +29,171 @@ export GROQ_API_KEY="gsk_your_real_groq_key_here"
 # LangSmith API Key
 export LANGCHAIN_API_KEY="ls__your_real_langsmith_key_here"
 
-# OpenAI API Key (para embeddings - ainda necessário)
+# OpenAI API Key (for embeddings - still needed)
 export OPENAI_API_KEY="sk-your_openai_key_here"
 
-# Configurações do LangSmith
+# LangSmith Configuration
 export LANGCHAIN_PROJECT="groq-eu-ai-act-compliance"
 export LANGCHAIN_TRACING_V2=true
 ```
 
-## 🤖 Modelos Groq Disponíveis
+## 🤖 Available Groq Models
 
-### **Modelo Atual: llama-3.1-70b-versatile**
-- **Velocidade**: ~300 tokens/segundo
-- **Qualidade**: Excelente para compliance
-- **Custo**: Muito baixo
-- **Uso**: Recomendado para produção
+### **Current Model: llama-3.1-70b-versatile**
+- **Speed**: ~300 tokens/second
+- **Quality**: Excellent for compliance
+- **Cost**: Very low
+- **Usage**: Recommended for production
 
-### **Alternativas Disponíveis**
+### **Available Alternatives**
 
 ```python
-# Para mudar o modelo, edite src/services/groq_langchain_rag.py
+# To change the model, edit src/services/groq_langchain_rag.py
 self.llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
-    model_name="llama-3.1-8b-instant",    # Mais rápido, menor
-    # model_name="mixtral-8x7b-32768",    # Alternativa
-    # model_name="gemma-7b-it",           # Alternativa
+    model_name="llama-3.1-8b-instant",    # Faster, smaller
+    # model_name="mixtral-8x7b-32768",    # Alternative
+    # model_name="gemma-7b-it",           # Alternative
     temperature=0.1,
     max_tokens=1000
 )
 ```
 
-## 🧪 Testando a Configuração
+## 🧪 Testing the Configuration
 
-### 1. **Teste Direto**
+### 1. **Direct Test**
 
 ```bash
-# Testar implementação Groq
+# Test Groq implementation
 python3 test_groq_langchain.py
 ```
 
-### 2. **Teste da API**
+### 2. **API Test**
 
 ```bash
-# Iniciar servidor
+# Start server
 uvicorn src.main:app --reload
 
-# Em outro terminal, testar API
+# In another terminal, test API
 python3 test_api_langchain.py
 ```
 
-### 3. **Verificar LangSmith**
+### 3. **Check LangSmith**
 
-1. Acesse [LangSmith Dashboard](https://smith.langchain.com/)
-2. Vá para o projeto "groq-eu-ai-act-compliance"
-3. Verifique os traces das requisições
+1. Visit [LangSmith Dashboard](https://smith.langchain.com/)
+2. Go to project "groq-eu-ai-act-compliance"
+3. Check request traces
 
-## 🌐 Uso da API
+## 🌐 API Usage
 
-### **Endpoints Disponíveis**
+### **Available Endpoints**
 
 ```bash
-# 1. Login para obter JWT
+# 1. Login to get JWT
 curl -X POST "http://localhost:8000/v1/auth/login" \
      -H "Content-Type: application/x-www-form-urlencoded" \
      -d "username=analyst&password=analyst"
 
-# 2. Usar token para setup
-export JWT_TOKEN="seu-jwt-token"
+# 2. Use token for setup
+export JWT_TOKEN="your-jwt-token"
 curl -X POST "http://localhost:8000/v1/langchain/setup" \
      -H "Authorization: Bearer $JWT_TOKEN"
 
-# 3. Fazer pergunta
+# 3. Ask question
 curl -X POST "http://localhost:8000/v1/langchain/ask" \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $JWT_TOKEN" \
      -d '{"question": "What are high-risk AI systems under the EU AI Act?"}'
 ```
 
-## 📊 Comparação de Performance
+## 📊 Performance Comparison
 
 ### **Groq vs OpenAI**
 
-| Métrica | Groq Llama-3.1-70b | OpenAI GPT-4 |
+| Metric | Groq Llama-3.1-70b | OpenAI GPT-4 |
 |---------|-------------------|--------------|
-| Velocidade | ~300 tokens/seg | ~50 tokens/seg |
-| Custo | ~$0.10/1M tokens | ~$1.00/1M tokens |
-| Qualidade | Excelente | Excelente |
-| Privacidade | ✅ Open-source | ❌ Proprietário |
-| EU Compliance | ✅ Amigável | ⚠️ Dados nos EUA |
+| Speed | ~300 tokens/sec | ~50 tokens/sec |
+| Cost | ~$0.10/1M tokens | ~$1.00/1M tokens |
+| Quality | Excellent | Excellent |
+| Privacy | ✅ Open-source | ❌ Proprietary |
+| EU Compliance | ✅ Friendly | ⚠️ Data in USA |
 
-### **Benefícios do Groq**
+### **Groq Benefits**
 
-- ⚡ **6x mais rápido** que OpenAI
-- 💰 **10x mais barato** que OpenAI
-- 🔓 **Modelos open-source** (Llama, Mixtral)
-- 🌍 **Sem restrições de residência** de dados
-- ⚖️ **Amigável ao GDPR** (sem dados saindo da UE)
+- ⚡ **6x faster** than OpenAI
+- 💰 **10x cheaper** than OpenAI
+- 🔓 **Open-source models** (Llama, Mixtral)
+- 🌍 **No data residency** restrictions
+- ⚖️ **GDPR-friendly** (no data leaving EU)
 
-## 🔍 Monitoramento com LangSmith
+## 🔍 Monitoring with LangSmith
 
-### **Traces Automáticos**
+### **Automatic Traces**
 
-Cada pergunta gera automaticamente um trace no LangSmith com:
+Each question automatically generates a trace in LangSmith with:
 
-- **Inputs**: Pergunta do usuário
-- **Outputs**: Resposta e fontes
-- **Metadata**: Modelo usado, provider, temperatura
-- **Performance**: Latência, tokens utilizados
-- **Erros**: Logs de erros se houver
+- **Inputs**: User question
+- **Outputs**: Response and sources
+- **Metadata**: Model used, provider, temperature
+- **Performance**: Latency, tokens used
+- **Errors**: Error logs if any
 
-### **Métricas Disponíveis**
+### **Available Metrics**
 
-- **Latência média**: Tempo de resposta
-- **Taxa de erro**: Percentual de falhas
-- **Uso de tokens**: Eficiência do modelo
-- **Qualidade**: Feedback dos usuários
-- **Compliance**: Score de conformidade
+- **Average latency**: Response time
+- **Error rate**: Failure percentage
+- **Token usage**: Model efficiency
+- **Quality**: User feedback
+- **Compliance**: Compliance score
 
-## 🛠️ Configuração Avançada
+## 🛠️ Advanced Configuration
 
-### **Personalizar Prompts**
+### **Customize Prompts**
 
-Edite `src/services/groq_langchain_rag.py`:
+Edit `src/services/groq_langchain_rag.py`:
 
 ```python
 self.prompt_template = PromptTemplate(
-    template="""Você é um especialista em conformidade com o EU AI Act...
+    template="""You are an EU AI Act compliance expert...
 
-    Contexto:
+    Context:
     {context}
 
-    Pergunta: {question}
+    Question: {question}
     
-    Resposta:""",
+    Answer:""",
     input_variables=["context", "question"]
 )
 ```
 
-### **Ajustar Parâmetros**
+### **Adjust Parameters**
 
 ```python
 self.llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
     model_name="llama-3.1-70b-versatile",
-    temperature=0.1,      # Criatividade (0-1)
-    max_tokens=1000,      # Tamanho máximo da resposta
+    temperature=0.1,      # Creativity (0-1)
+    max_tokens=1000,      # Maximum response size
     top_p=0.9,           # Nucleus sampling
     top_k=40             # Top-k sampling
 )
 ```
 
-### **Configurar Retrieval**
+### **Configure Retrieval**
 
 ```python
 self.retriever = self.vectorstore.as_retriever(
     search_type="similarity",
-    search_kwargs={"k": 5}  # Número de documentos
+    search_kwargs={"k": 5}  # Number of documents
 )
 ```
 
-## 🚀 Deploy em Produção
+## 🚀 Production Deployment
 
-### **Variáveis de Ambiente**
+### **Environment Variables**
 
 ```bash
-# Produção
+# Production
 GROQ_API_KEY=gsk_production_key
 LANGCHAIN_API_KEY=ls__production_key
 OPENAI_API_KEY=sk-production_key

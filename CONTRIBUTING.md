@@ -1,244 +1,244 @@
-# 🤝 Contribuindo para LangSmith RAG
+# 🤝 Contributing to LangSmith RAG
 
-Obrigado por considerar contribuir para o projeto LangSmith RAG! Este documento fornece diretrizes para contribuir com o projeto.
+Thank you for considering contributing to the LangSmith RAG project! This document provides guidelines for contributing to the project.
 
-## 🚀 Como Contribuir
+## 🚀 How to Contribute
 
-### 1. **Fork e Clone**
+### 1. **Fork and Clone**
 
 ```bash
-# Fork o repositório no GitHub
-# Depois clone seu fork
-git clone https://github.com/SEU_USUARIO/langsmith-rag.git
+# Fork the repository on GitHub
+# Then clone your fork
+git clone https://github.com/YOUR_USERNAME/langsmith-rag.git
 cd langsmith-rag
 
-# Adicione o repositório original como upstream
+# Add the original repository as upstream
 git remote add upstream https://github.com/onchainlabs1/langsmith-rag.git
 ```
 
-### 2. **Criar uma Branch**
+### 2. **Create a Branch**
 
 ```bash
-# Crie uma branch para sua feature
-git checkout -b feature/nova-funcionalidade
-# ou
-git checkout -b fix/correcao-bug
+# Create a branch for your feature
+git checkout -b feature/new-feature
+# or
+git checkout -b fix/bug-fix
 ```
 
-### 3. **Desenvolver**
+### 3. **Develop**
 
-- Faça suas alterações
-- Adicione testes se necessário
-- Mantenha a documentação atualizada
-- Siga as convenções de código
+- Make your changes
+- Add tests if necessary
+- Keep documentation updated
+- Follow code conventions
 
-### 4. **Testar**
+### 4. **Test**
 
 ```bash
-# Instalar dependências
+# Install dependencies
 pip install -r requirements.txt
 
-# Executar testes
+# Run tests
 python test_mock_langchain.py
 python test_langsmith_config.py
 
-# Verificar linting
+# Check linting
 ruff check src/
 mypy src/ --ignore-missing-imports
 ```
 
-### 5. **Commit e Push**
+### 5. **Commit and Push**
 
 ```bash
-# Adicionar mudanças
+# Add changes
 git add .
 
-# Commit com mensagem descritiva
-git commit -m "feat: adiciona nova funcionalidade X"
+# Commit with descriptive message
+git commit -m "feat: add new feature X"
 
-# Push para sua branch
-git push origin feature/nova-funcionalidade
+# Push to your branch
+git push origin feature/new-feature
 ```
 
 ### 6. **Pull Request**
 
-1. Vá para o repositório original no GitHub
-2. Clique em "Compare & pull request"
-3. Preencha o template do PR
-4. Aguarde a revisão
+1. Go to the original repository on GitHub
+2. Click "Compare & pull request"
+3. Fill in the PR template
+4. Wait for review
 
-## 📋 Convenções
+## 📋 Conventions
 
 ### **Commits**
 
-Use o padrão [Conventional Commits](https://www.conventionalcommits.org/):
+Use the [Conventional Commits](https://www.conventionalcommits.org/) pattern:
 
-- `feat:` nova funcionalidade
-- `fix:` correção de bug
-- `docs:` documentação
-- `style:` formatação
-- `refactor:` refatoração
-- `test:` testes
-- `chore:` tarefas de manutenção
+- `feat:` new feature
+- `fix:` bug fix
+- `docs:` documentation
+- `style:` formatting
+- `refactor:` refactoring
+- `test:` tests
+- `chore:` maintenance tasks
 
 ### **Branches**
 
-- `feature/nome-da-funcionalidade`
-- `fix/nome-da-correcao`
-- `docs/nome-da-documentacao`
-- `refactor/nome-da-refatoracao`
+- `feature/feature-name`
+- `fix/fix-name`
+- `docs/documentation-name`
+- `refactor/refactoring-name`
 
-### **Código**
+### **Code**
 
-- Use type hints em Python
-- Documente funções com docstrings
-- Mantenha funções pequenas e focadas
-- Use nomes descritivos para variáveis
+- Use type hints in Python
+- Document functions with docstrings
+- Keep functions small and focused
+- Use descriptive names for variables
 
-## 🧪 Testes
+## 🧪 Testing
 
-### **Estrutura de Testes**
+### **Test Structure**
 
 ```
 tests/
-├── test_api.py              # Testes da API
-├── test_services.py         # Testes dos serviços
-├── test_ai_act_compliance.py # Testes de conformidade
+├── test_api.py              # API tests
+├── test_services.py         # Service tests
+├── test_ai_act_compliance.py # Compliance tests
 └── performance/
-    └── k6-load-test.js      # Testes de performance
+    └── k6-load-test.js      # Performance tests
 ```
 
-### **Executar Testes**
+### **Run Tests**
 
 ```bash
-# Todos os testes
+# All tests
 pytest tests/
 
-# Teste específico
+# Specific test
 pytest tests/test_api.py
 
-# Com coverage
+# With coverage
 pytest --cov=src tests/
 ```
 
-## 📚 Documentação
+## 📚 Documentation
 
-### **Atualizar Documentação**
+### **Update Documentation**
 
-- README.md para mudanças principais
-- DOCS/ para documentação detalhada
-- Docstrings para código Python
-- Comentários para lógica complexa
+- README.md for major changes
+- DOCS/ for detailed documentation
+- Docstrings for Python code
+- Comments for complex logic
 
-### **Estrutura de Documentação**
+### **Documentation Structure**
 
 ```
 docs/
-├── SETUP.md              # Guia de instalação
-├── API.md                # Documentação da API
-├── DEPLOYMENT.md         # Guia de deploy
-└── CONTRIBUTING.md       # Este arquivo
+├── SETUP.md              # Installation guide
+├── API.md                # API documentation
+├── DEPLOYMENT.md         # Deployment guide
+└── CONTRIBUTING.md       # This file
 ```
 
-## 🐛 Reportar Bugs
+## 🐛 Bug Reports
 
-### **Template de Bug Report**
+### **Bug Report Template**
 
 ```markdown
-## 🐛 Descrição do Bug
+## 🐛 Bug Description
 
-Descrição clara do bug.
+Clear description of the bug.
 
-## 🔄 Passos para Reproduzir
+## 🔄 Steps to Reproduce
 
-1. Vá para '...'
-2. Clique em '...'
-3. Veja o erro
+1. Go to '...'
+2. Click on '...'
+3. See error
 
-## 🎯 Comportamento Esperado
+## 🎯 Expected Behavior
 
-O que deveria acontecer.
+What should happen.
 
 ## 📸 Screenshots
 
-Se aplicável, adicione screenshots.
+If applicable, add screenshots.
 
-## 🔧 Ambiente
+## 🔧 Environment
 
 - OS: [e.g. macOS, Linux, Windows]
 - Python: [e.g. 3.11]
-- Versão: [e.g. v1.0.0]
+- Version: [e.g. v1.0.0]
 
 ## 📝 Logs
 
-Adicione logs relevantes.
+Add relevant logs.
 ```
 
-## 💡 Sugestões de Features
+## 💡 Feature Suggestions
 
-### **Template de Feature Request**
+### **Feature Request Template**
 
 ```markdown
 ## 🚀 Feature Request
 
-### Descrição
-Descrição clara da funcionalidade.
+### Description
+Clear description of the feature.
 
-### Caso de Uso
-Por que esta funcionalidade seria útil?
+### Use Case
+Why would this feature be useful?
 
-### Alternativas Consideradas
-Outras soluções que você considerou.
+### Alternatives Considered
+Other solutions you considered.
 
-### Contexto Adicional
-Qualquer outra informação relevante.
+### Additional Context
+Any other relevant information.
 ```
 
 ## 🏷️ Releases
 
-### **Versionamento**
+### **Versioning**
 
-Seguimos [Semantic Versioning](https://semver.org/):
+We follow [Semantic Versioning](https://semver.org/):
 
-- `MAJOR`: mudanças incompatíveis
-- `MINOR`: nova funcionalidade compatível
-- `PATCH`: correções de bugs compatíveis
+- `MAJOR`: incompatible changes
+- `MINOR`: compatible new feature
+- `PATCH`: compatible bug fixes
 
-### **Processo de Release**
+### **Release Process**
 
-1. Atualizar CHANGELOG.md
-2. Criar tag: `git tag -a v1.1.0 -m "Release v1.1.0"`
+1. Update CHANGELOG.md
+2. Create tag: `git tag -a v1.1.0 -m "Release v1.1.0"`
 3. Push tag: `git push origin v1.1.0`
-4. Criar release no GitHub
+4. Create release on GitHub
 
-## 🤝 Código de Conduta
+## 🤝 Code of Conduct
 
-### **Nossos Compromissos**
+### **Our Commitments**
 
-- Ambiente acolhedor e inclusivo
-- Respeito mútuo
-- Feedback construtivo
-- Foco no que é melhor para a comunidade
+- Welcoming and inclusive environment
+- Mutual respect
+- Constructive feedback
+- Focus on what's best for the community
 
-### **Comportamentos Inaceitáveis**
+### **Unacceptable Behavior**
 
-- Linguagem ou imagens ofensivas
-- Comentários depreciativos
-- Ataques pessoais ou políticos
-- Assédio público ou privado
+- Offensive language or images
+- Derogatory comments
+- Personal or political attacks
+- Public or private harassment
 
-## 📞 Contato
+## 📞 Contact
 
 - **Issues**: [GitHub Issues](https://github.com/onchainlabs1/langsmith-rag/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/onchainlabs1/langsmith-rag/discussions)
-- **Email**: [Seu email se quiser]
+- **Email**: [Your email if desired]
 
-## 🙏 Reconhecimentos
+## 🙏 Acknowledgments
 
-- Obrigado a todos os contribuidores!
-- Agradecimentos especiais aos primeiros usuários
-- Comunidade LangChain e Groq
+- Thank you to all contributors!
+- Special thanks to early users
+- LangChain and Groq communities
 
 ---
 
-**Obrigado por contribuir! 🎉**
+**Thank you for contributing! 🎉**

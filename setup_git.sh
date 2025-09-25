@@ -1,50 +1,50 @@
 #!/bin/bash
 
-# Script para configurar e subir o projeto langsmith-rag para GitHub
-# Repositório: https://github.com/onchainlabs1/langsmith-rag
+# Script to configure and upload the langsmith-rag project to GitHub
+# Repository: https://github.com/onchainlabs1/langsmith-rag
 
-echo "🚀 Configurando projeto langsmith-rag para GitHub..."
-echo "Repositório: https://github.com/onchainlabs1/langsmith-rag"
+echo "🚀 Configuring langsmith-rag project for GitHub..."
+echo "Repository: https://github.com/onchainlabs1/langsmith-rag"
 echo "================================================"
 
-# Verificar se estamos no diretório correto
+# Check if we're in the correct directory
 if [ ! -f "src/main.py" ]; then
-    echo "❌ Erro: Execute este script na raiz do projeto langsmith-rag"
+    echo "❌ Error: Run this script from the langsmith-rag project root"
     exit 1
 fi
 
-# Verificar se git está instalado
+# Check if git is installed
 if ! command -v git &> /dev/null; then
-    echo "❌ Git não está instalado. Instale o Git primeiro."
+    echo "❌ Git is not installed. Install Git first."
     exit 1
 fi
 
-# Inicializar git se não estiver inicializado
+# Initialize git if not already initialized
 if [ ! -d ".git" ]; then
-    echo "📁 Inicializando repositório git..."
+    echo "📁 Initializing git repository..."
     git init
 fi
 
-# Adicionar remote se não existir
+# Add remote if it doesn't exist
 if ! git remote get-url origin &> /dev/null; then
-    echo "🔗 Adicionando remote origin..."
+    echo "🔗 Adding remote origin..."
     git remote add origin https://github.com/onchainlabs1/langsmith-rag.git
 fi
 
-# Verificar status
-echo "📊 Status atual do git:"
+# Check status
+echo "📊 Current git status:"
 git status
 
-# Adicionar todos os arquivos
-echo "📝 Adicionando arquivos ao git..."
+# Add all files
+echo "📝 Adding files to git..."
 git add .
 
-# Verificar se há mudanças para commit
+# Check if there are changes to commit
 if git diff --staged --quiet; then
-    echo "ℹ️ Nenhuma mudança para commitar."
+    echo "ℹ️ No changes to commit."
 else
-    # Fazer commit
-    echo "💾 Fazendo commit inicial..."
+    # Make commit
+    echo "💾 Making initial commit..."
     git commit -m "🚀 Initial commit: EU AI Act Compliance RAG System
 
 - ✅ Groq + LangChain implementation
@@ -60,34 +60,34 @@ else
 - ✅ Cost-effective (10x cheaper than OpenAI)
 - ✅ EU-friendly (no data leaving EU)"
 
-    # Subir para GitHub
-    echo "⬆️ Subindo para GitHub..."
+    # Push to GitHub
+    echo "⬆️ Pushing to GitHub..."
     git push -u origin main
     
     if [ $? -eq 0 ]; then
-        echo "✅ Sucesso! Projeto subido para GitHub."
-        echo "🔗 Acesse: https://github.com/onchainlabs1/langsmith-rag"
+        echo "✅ Success! Project uploaded to GitHub."
+        echo "🔗 Access: https://github.com/onchainlabs1/langsmith-rag"
     else
-        echo "❌ Erro ao subir para GitHub. Verifique sua conexão e credenciais."
+        echo "❌ Error uploading to GitHub. Check your connection and credentials."
         exit 1
     fi
 fi
 
 echo ""
-echo "🎉 Configuração concluída!"
-echo "📋 Próximos passos:"
-echo "1. Configure suas chaves API:"
-echo "   export GROQ_API_KEY='sua_chave_groq'"
-echo "   export LANGCHAIN_API_KEY='sua_chave_langsmith'"
-echo "   export OPENAI_API_KEY='sua_chave_openai'"
+echo "🎉 Configuration completed!"
+echo "📋 Next steps:"
+echo "1. Configure your API keys:"
+echo "   export GROQ_API_KEY='your_groq_key'"
+echo "   export LANGCHAIN_API_KEY='your_langsmith_key'"
+echo "   export OPENAI_API_KEY='your_openai_key'"
 echo ""
-echo "2. Teste o sistema:"
+echo "2. Test the system:"
 echo "   python3 test_groq_langchain.py"
 echo ""
-echo "3. Inicie o servidor:"
+echo "3. Start the server:"
 echo "   uvicorn src.main:app --reload"
 echo ""
-echo "4. Acesse a documentação:"
+echo "4. Access the documentation:"
 echo "   http://localhost:8000/docs"
 echo ""
-echo "🔗 Repositório: https://github.com/onchainlabs1/langsmith-rag"
+echo "🔗 Repository: https://github.com/onchainlabs1/langsmith-rag"

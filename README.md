@@ -6,20 +6,20 @@
 [![Groq](https://img.shields.io/badge/Groq-0.23+-purple.svg)](https://groq.com/)
 [![LangSmith](https://img.shields.io/badge/LangSmith-0.3+-red.svg)](https://smith.langchain.com/)
 
-> **Sistema RAG especializado em conformidade com o EU AI Act usando LangChain, Groq e LangSmith para inferência ultra-rápida e monitoramento completo.**
+> **RAG system specialized in EU AI Act compliance using LangChain, Groq and LangSmith for ultra-fast inference and complete monitoring.**
 
-## 🌟 Características Principais
+## 🌟 Key Features
 
-- ⚡ **Inferência Ultra-Rápida**: Groq com ~300 tokens/segundo (6x mais rápido que OpenAI)
-- 💰 **Custo-Efetivo**: ~10x mais barato que OpenAI
-- 🔍 **Monitoramento Completo**: Traces automáticos no LangSmith
-- ⚖️ **Foco em Conformidade**: Especializado em EU AI Act
-- 🛡️ **Segurança**: Autenticação JWT e observabilidade completa
-- 🌍 **EU-Friendly**: Sem restrições de residência de dados
-- 📊 **Observabilidade**: Métricas Prometheus e Grafana
-- 🔄 **Auto-Detecção**: Groq > OpenAI > Mock automaticamente
+- ⚡ **Ultra-Fast Inference**: Groq with ~300 tokens/second (6x faster than OpenAI)
+- 💰 **Cost-Effective**: ~10x cheaper than OpenAI
+- 🔍 **Complete Monitoring**: Automatic traces in LangSmith
+- ⚖️ **Compliance Focus**: Specialized in EU AI Act
+- 🛡️ **Security**: JWT authentication and complete observability
+- 🌍 **EU-Friendly**: No data residency restrictions
+- 📊 **Observability**: Prometheus metrics and Grafana
+- 🔄 **Auto-Detection**: Groq > OpenAI > Mock automatically
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -37,107 +37,107 @@
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🚀 Início Rápido
+## 🚀 Quick Start
 
-### 1. **Clone o Repositório**
+### 1. **Clone the Repository**
 
 ```bash
 git clone https://github.com/onchainlabs1/langsmith-rag.git
 cd langsmith-rag
 ```
 
-### 2. **Instalar Dependências**
+### 2. **Install Dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. **Configurar Chaves API**
+### 3. **Configure API Keys**
 
 ```bash
-# Groq API Key (GRATUITO)
-export GROQ_API_KEY="gsk_sua_chave_groq_aqui"
+# Groq API Key (FREE)
+export GROQ_API_KEY="gsk_your_groq_key_here"
 
-# LangSmith API Key (GRATUITO - 5.000 traces/mês)
-export LANGCHAIN_API_KEY="ls__sua_chave_langsmith_aqui"
+# LangSmith API Key (FREE - 5,000 traces/month)
+export LANGCHAIN_API_KEY="ls__your_langsmith_key_here"
 
-# OpenAI API Key (para embeddings)
-export OPENAI_API_KEY="sk-sua_chave_openai_aqui"
+# OpenAI API Key (for embeddings)
+export OPENAI_API_KEY="sk-your_openai_key_here"
 
-# Configurações LangSmith
+# LangSmith Configuration
 export LANGCHAIN_PROJECT="groq-eu-ai-act-compliance"
 export LANGCHAIN_TRACING_V2=true
 ```
 
-### 4. **Testar Configuração**
+### 4. **Test Configuration**
 
 ```bash
-# Testar LangSmith
+# Test LangSmith
 python3 test_langsmith_config.py
 
-# Testar sistema completo
+# Test complete system
 python3 test_groq_langchain.py
 ```
 
-### 5. **Iniciar Servidor**
+### 5. **Start Server**
 
 ```bash
 uvicorn src.main:app --reload
 ```
 
-### 6. **Acessar Interface**
+### 6. **Access Interface**
 
 - **API Documentation**: http://localhost:8000/docs
 - **Streamlit UI**: `streamlit run ui_app.py`
 - **LangSmith Traces**: https://smith.langchain.com/
 
-## 📋 Como Obter as Chaves API
+## 📋 How to Get API Keys
 
-### **Groq API Key (GRATUITO)**
-1. Acesse [console.groq.com/keys](https://console.groq.com/keys)
-2. Faça login/crie conta
-3. Clique em "Create API Key"
-4. Copie a chave (começa com `gsk_...`)
+### **Groq API Key (FREE)**
+1. Visit [console.groq.com/keys](https://console.groq.com/keys)
+2. Login/create account
+3. Click "Create API Key"
+4. Copy the key (starts with `gsk_...`)
 
-### **LangSmith API Key (GRATUITO)**
-1. Acesse [smith.langchain.com](https://smith.langchain.com/)
-2. Login com GitHub
+### **LangSmith API Key (FREE)**
+1. Visit [smith.langchain.com](https://smith.langchain.com/)
+2. Login with GitHub
 3. Settings > API Keys > Create API Key
-4. Copie a chave (começa com `ls__...`)
+4. Copy the key (starts with `ls__...`)
 
 ### **OpenAI API Key**
-1. Acesse [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-2. Crie nova chave
-3. Copie a chave (começa com `sk-...`)
+1. Visit [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+2. Create new key
+3. Copy the key (starts with `sk-...`)
 
-## 🧪 Testes
+## 🧪 Testing
 
 ```bash
-# Testar configuração LangSmith
+# Test LangSmith configuration
 python3 test_langsmith_config.py
 
-# Testar sistema Groq
+# Test Groq system
 python3 test_groq_langchain.py
 
-# Testar API endpoints
+# Test API endpoints
 python3 test_api_langchain.py
 
-# Testar mock (sem chaves API)
+# Test mock (without API keys)
 python3 test_mock_langchain.py
 ```
 
 ## 🌐 API Endpoints
 
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | `GET` | `/v1/langchain/health` | Health check |
-| `POST` | `/v1/langchain/setup` | Inicializar sistema RAG |
-| `POST` | `/v1/langchain/ask` | Fazer perguntas sobre EU AI Act |
-| `GET` | `/v1/langchain/similar/{query}` | Buscar documentos similares |
-| `GET` | `/v1/langchain/info` | Informações do sistema |
-| `POST` | `/v1/auth/login` | Autenticação JWT |
+| `POST` | `/v1/langchain/setup` | Initialize RAG system |
+| `POST` | `/v1/langchain/ask` | Ask questions about EU AI Act |
+| `GET` | `/v1/langchain/similar/{query}` | Search similar documents |
+| `GET` | `/v1/langchain/info` | System information |
+| `POST` | `/v1/auth/login` | JWT authentication |
 
-### **Exemplo de Uso**
+### **Usage Example**
 
 ```bash
 # Login
@@ -148,7 +148,7 @@ curl -X POST "http://localhost:8000/v1/auth/login" \
 curl -X POST "http://localhost:8000/v1/langchain/setup" \
      -H "Authorization: Bearer $JWT_TOKEN"
 
-# Fazer pergunta
+# Ask question
 curl -X POST "http://localhost:8000/v1/langchain/ask" \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer $JWT_TOKEN" \
@@ -157,48 +157,48 @@ curl -X POST "http://localhost:8000/v1/langchain/ask" \
 
 ## 📊 Performance
 
-### **Comparação de LLMs**
+### **LLM Comparison**
 
-| Métrica | Groq | OpenAI | Mock |
+| Metric | Groq | OpenAI | Mock |
 |---------|------|--------|------|
-| Velocidade | 300 tok/s | 50 tok/s | Instantâneo |
-| Custo | $0.10/1M | $1.00/1M | Grátis |
-| Qualidade | Excelente | Excelente | Básica |
+| Speed | 300 tok/s | 50 tok/s | Instant |
+| Cost | $0.10/1M | $1.00/1M | Free |
+| Quality | Excellent | Excellent | Basic |
 | LangSmith | ✅ | ✅ | ❌ |
 
-### **Benefícios do Groq**
+### **Groq Benefits**
 
-- ⚡ **6x mais rápido** que OpenAI
-- 💰 **10x mais barato** que OpenAI
-- 🔓 **Modelos open-source** (Llama, Mixtral)
-- 🌍 **Sem restrições de dados** (não sai da UE)
+- ⚡ **6x faster** than OpenAI
+- 💰 **10x cheaper** than OpenAI
+- 🔓 **Open-source models** (Llama, Mixtral)
+- 🌍 **No data restrictions** (stays in EU)
 - ⚖️ **GDPR-friendly**
 
-## 🛠️ Desenvolvimento
+## 🛠️ Development
 
-### **Estrutura do Projeto**
+### **Project Structure**
 
 ```
 langsmith-rag/
 ├── src/
-│   ├── api/                    # Endpoints da API
-│   ├── app/services/           # Serviços avançados
-│   ├── core/                   # Configuração e segurança
-│   ├── services/               # Serviços LangChain
-│   └── main.py                 # Aplicação FastAPI
-├── tests/                      # Testes automatizados
-├── monitoring/                 # Configuração Prometheus/Grafana
-├── docs/                       # Documentação
-└── requirements.txt            # Dependências
+│   ├── api/                    # API endpoints
+│   ├── app/services/           # Advanced services
+│   ├── core/                   # Configuration and security
+│   ├── services/               # LangChain services
+│   └── main.py                 # FastAPI application
+├── tests/                      # Automated tests
+├── monitoring/                 # Prometheus/Grafana configuration
+├── docs/                       # Documentation
+└── requirements.txt            # Dependencies
 ```
 
-### **Scripts de Desenvolvimento**
+### **Development Scripts**
 
 ```bash
-# Desenvolvimento
+# Development
 uvicorn src.main:app --reload
 
-# Testes
+# Testing
 pytest tests/
 
 # Linting
@@ -224,63 +224,63 @@ docker run -p 8000:8000 \
   langsmith-rag
 ```
 
-## 📈 Monitoramento
+## 📈 Monitoring
 
 ### **Prometheus Metrics**
-- Acesse: http://localhost:8000/metrics
+- Access: http://localhost:8000/metrics
 
 ### **Grafana Dashboard**
-- Configuração em `monitoring/grafana/`
+- Configuration in `monitoring/grafana/`
 
 ### **LangSmith Traces**
-- Acesse: https://smith.langchain.com/
-- Projeto: `groq-eu-ai-act-compliance`
+- Access: https://smith.langchain.com/
+- Project: `groq-eu-ai-act-compliance`
 
-## 🔒 Segurança
+## 🔒 Security
 
-- ✅ Autenticação JWT
+- ✅ JWT authentication
 - ✅ Rate limiting
 - ✅ Input validation
 - ✅ Error handling
-- ✅ Observabilidade completa
-- ✅ Logs estruturados
+- ✅ Complete observability
+- ✅ Structured logs
 
-## 📚 Documentação
+## 📚 Documentation
 
-- [Guia de Implementação LangChain](LANGCHAIN_IMPLEMENTATION_GUIDE.md)
-- [Setup Groq + LangSmith](GROQ_LANGSMITH_SETUP.md)
-- [Arquitetura do Sistema](ARCHITECTURE.md)
-- [Observabilidade](OBSERVABILITY.md)
-- [Segurança](SECURITY.md)
+- [LangChain Implementation Guide](LANGCHAIN_IMPLEMENTATION_GUIDE.md)
+- [Groq + LangSmith Setup](GROQ_LANGSMITH_SETUP.md)
+- [System Architecture](ARCHITECTURE.md)
+- [Observability](OBSERVABILITY.md)
+- [Security](SECURITY.md)
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
+1. Fork the project
+2. Create a branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICENSE) para detalhes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Agradecimentos
+## 🙏 Acknowledgments
 
-- [LangChain](https://python.langchain.com/) - Framework de LLM
-- [Groq](https://groq.com/) - Inferência ultra-rápida
-- [LangSmith](https://smith.langchain.com/) - Monitoramento e tracing
-- [FastAPI](https://fastapi.tiangolo.com/) - Framework web moderno
-- [Streamlit](https://streamlit.io/) - Interface de usuário
+- [LangChain](https://python.langchain.com/) - LLM Framework
+- [Groq](https://groq.com/) - Ultra-fast inference
+- [LangSmith](https://smith.langchain.com/) - Monitoring and tracing
+- [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
+- [Streamlit](https://streamlit.io/) - User interface
 
-## 📞 Suporte
+## 📞 Support
 
 - 📧 **Issues**: [GitHub Issues](https://github.com/onchainlabs1/langsmith-rag/issues)
-- 📖 **Documentação**: [Wiki do Projeto](https://github.com/onchainlabs1/langsmith-rag/wiki)
-- 💬 **Discussões**: [GitHub Discussions](https://github.com/onchainlabs1/langsmith-rag/discussions)
+- 📖 **Documentation**: [Project Wiki](https://github.com/onchainlabs1/langsmith-rag/wiki)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/onchainlabs1/langsmith-rag/discussions)
 
 ---
 
-**Desenvolvido com ❤️ para conformidade com EU AI Act**
+**Developed with ❤️ for EU AI Act compliance**
 
-⭐ **Se este projeto foi útil, considere dar uma estrela!**
+⭐ **If this project was useful, consider giving it a star!**
