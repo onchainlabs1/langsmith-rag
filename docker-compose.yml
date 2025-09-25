@@ -1,0 +1,166 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eu-ai-act-api
+    ports:
+      - "8000:8000"
+      - "8001:8001"  # Prometheus metrics
+    environment:
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2:-true}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - LANGCHAIN_PROJECT=${LANGCHAIN_PROJECT:-langsmith-demo}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - VECTORSTORE_PATH=/app/data/vectorstore
+      - SECRET_KEY=${SECRET_KEY:-prod-secret-key}
+      - JWT_SECRET=${JWT_SECRET:-jwt-secret-key}
+      - JWT_ISSUER=${JWT_ISSUER:-eu-ai-act-api}
+      - JWT_AUDIENCE=${JWT_AUDIENCE:-eu-ai-act-users}
+      - OTLP_ENDPOINT=${OTLP_ENDPOINT:-}
+      - PROMETHEUS_PORT=8001
+    volumes:
+      - ./data:/app/data
+      - ./evals:/app/evals
+    networks:
+      - ai-act-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    depends_on:
+      - vectorstore-init
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    container_name: eu-ai-act-ui
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000/v1/answer
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    networks:
+      - ai-act-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    depends_on:
+      - api
+
+  vectorstore-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eu-ai-act-vectorstore-init
+    environment:
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2:-true}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - LANGCHAIN_PROJECT=${LANGCHAIN_PROJECT:-langsmith-demo}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - VECTORSTORE_PATH=/app/data/vectorstore
+    volumes:
+      - ./data:/app/data
+    networks:
+      - ai-act-network
+    command: >
+      sh -c "
+        echo 'Initializing AI Act corpus...' &&
+        python -m src.app.retrieval.index_ai_act --corpus-dir data/knowledge/ai_act --verbose &&
+        echo 'Vectorstore initialization complete'
+      "
+    restart: "no"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: eu-ai-act-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    networks:
+      - ai-act-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: eu-ai-act-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - ai-act-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:latest
+    container_name: eu-ai-act-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki.yml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - ai-act-network
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: eu-ai-act-promtail
+    volumes:
+      - ./monitoring/promtail.yml:/etc/promtail/config.yml
+      - /var/log:/var/log:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - ai-act-network
+    restart: unless-stopped
+    depends_on:
+      - loki
+
+networks:
+  ai-act-network:
+    driver: bridge
+
+volumes:
+  vectorstore-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  loki-data:
+    driver: local

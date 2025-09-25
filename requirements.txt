@@ -1,0 +1,47 @@
+fastapi==0.110.0
+uvicorn[standard]==0.27.0
+langchain==0.1.0
+langchain-openai==0.0.5
+langsmith==0.1.0
+faiss-cpu==1.7.4
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+httpx==0.25.0
+streamlit==1.28.0
+requests==2.31.0
+# Authentication and Security
+PyJWT==2.8.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+# Observability
+opentelemetry-api==1.37.0
+opentelemetry-sdk==1.37.0
+opentelemetry-instrumentation-fastapi==0.58b0
+opentelemetry-instrumentation-requests==0.58b0
+opentelemetry-instrumentation-httpx==0.58b0
+opentelemetry-instrumentation-asgi==0.58b0
+opentelemetry-instrumentation==0.58b0
+opentelemetry-util-http==0.58b0
+opentelemetry-exporter-otlp==1.36.0
+opentelemetry-exporter-otlp-proto-grpc==1.36.0
+opentelemetry-exporter-otlp-proto-http==1.36.0
+opentelemetry-exporter-otlp-proto-common==1.36.0
+opentelemetry-exporter-prometheus==0.58b0
+opentelemetry-proto==1.36.0
+opentelemetry-semantic-conventions==0.58b0
+prometheus-client==0.19.0
+# Advanced LangChain Features
+langchain-core==0.1.0
+langchain-community==0.0.10
+redis==5.0.1
+# Streaming Support
+sse-starlette==1.8.2
+# Testing
+pytest==7.4.0
+pytest-cov==4.1.0
+pytest-asyncio==0.21.0
+k6==0.0.1
+# Development
+ruff==0.1.0
+mypy==1.7.0

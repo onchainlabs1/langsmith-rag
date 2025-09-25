@@ -1,0 +1,62 @@
+groups:
+  - name: eu-ai-act-slos
+    rules:
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(rag_request_duration_seconds_bucket[5m])) > 2.5
+        for: 2m
+        labels:
+          severity: warning
+          service: eu-ai-act-api
+        annotations:
+          summary: "High latency detected"
+          description: "95th percentile latency is {{ $value }}s, above SLO threshold of 2.5s"
+
+      - alert: HighErrorRate
+        expr: rate(rag_errors_total[5m]) / rate(rag_requests_total[5m]) > 0.01
+        for: 2m
+        labels:
+          severity: critical
+          service: eu-ai-act-api
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }}, above SLO threshold of 1%"
+
+      - alert: LowGroundedness
+        expr: histogram_quantile(0.50, rate(rag_groundedness_score_bucket[10m])) < 0.75
+        for: 5m
+        labels:
+          severity: warning
+          service: eu-ai-act-api
+        annotations:
+          summary: "Low groundedness detected"
+          description: "Average groundedness is {{ $value }}, below SLO threshold of 0.75"
+
+      - alert: ServiceDown
+        expr: up{job="eu-ai-act-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: eu-ai-act-api
+        annotations:
+          summary: "API service is down"
+          description: "EU AI Act API service is not responding"
+
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / 1024 / 1024 / 1024 > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: eu-ai-act-api
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }}GB, above threshold of 2GB"
+
+      - alert: RateLimitExceeded
+        expr: rate(http_requests_total{status="429"}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: eu-ai-act-api
+        annotations:
+          summary: "Rate limit exceeded frequently"
+          description: "Rate limit exceeded {{ $value }} times per second"
