@@ -1,23 +1,23 @@
-# 🚀 Guia de Implementação do LangChain
+# 🚀 LangChain Implementation Guide
 
-## Visão Geral
+## Overview
 
-Este guia mostra como implementar o LangChain de forma prática e funcional no seu sistema RAG de conformidade com o EU AI Act. A implementação inclui tanto uma versão real (com OpenAI) quanto uma versão mock (para testes sem chaves API).
+This guide shows how to implement LangChain in a practical and functional way in your EU AI Act compliance RAG system. The implementation includes both a real version (with OpenAI) and a mock version (for testing without API keys).
 
-## 📁 Arquivos Criados
+## 📁 Files Created
 
-### 1. **Implementação Real do LangChain**
-- `src/services/langchain_rag.py` - Implementação completa com OpenAI
-- `src/api/langchain_routes.py` - Endpoints da API
-- `test_langchain_simple.py` - Testes com chave API real
+### 1. **Real LangChain Implementation**
+- `src/services/langchain_rag.py` - Complete implementation with OpenAI
+- `src/api/langchain_routes.py` - API endpoints
+- `test_langchain_simple.py` - Tests with real API key
 
-### 2. **Implementação Mock (para Testes)**
-- `src/services/mock_langchain_rag.py` - Versão mock para testes
-- `test_mock_langchain.py` - Testes sem chave API
+### 2. **Mock Implementation (for Testing)**
+- `src/services/mock_langchain_rag.py` - Mock version for testing
+- `test_mock_langchain.py` - Tests without API key
 
-### 3. **Testes e Documentação**
-- `test_api_langchain.py` - Testes dos endpoints da API
-- `LANGCHAIN_IMPLEMENTATION_GUIDE.md` - Este guia
+### 3. **Tests and Documentation**
+- `test_api_langchain.py` - API endpoint tests
+- `LANGCHAIN_IMPLEMENTATION_GUIDE.md` - This guide
 
 ## 🔧 Como Usar
 
