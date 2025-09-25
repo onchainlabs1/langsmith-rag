@@ -1,204 +1,204 @@
-# 🚀 Resumo: Configuração Groq + LangSmith
+# 🚀 Summary: Groq + LangSmith Setup
 
-## ✅ **O Que Foi Implementado**
+## ✅ **What Was Implemented**
 
-### 1. **Sistema Groq + LangChain**
-- **`src/services/groq_langchain_rag.py`** - Implementação completa com Groq
-- **Integração LangSmith** - Traces automáticos para monitoramento
-- **Auto-detecção** - Usa Groq se disponível, senão OpenAI ou mock
+### 1. **Groq + LangChain System**
+- **`src/services/groq_langchain_rag.py`** - Complete implementation with Groq
+- **LangSmith Integration** - Automatic traces for monitoring
+- **Auto-detection** - Uses Groq if available, otherwise OpenAI or mock
 
-### 2. **Recursos Implementados**
-- ✅ **Modelo Groq**: llama-3.1-70b-versatile
-- ✅ **Velocidade**: ~300 tokens/segundo (6x mais rápido que OpenAI)
-- ✅ **Custo**: ~10x mais barato que OpenAI
-- ✅ **LangSmith Tracing**: Monitoramento completo
-- ✅ **EU AI Act Focus**: Prompts especializados para conformidade
+### 2. **Implemented Features**
+- ✅ **Groq Model**: llama-3.1-70b-versatile
+- ✅ **Speed**: ~300 tokens/second (6x faster than OpenAI)
+- ✅ **Cost**: ~10x cheaper than OpenAI
+- ✅ **LangSmith Tracing**: Complete monitoring
+- ✅ **EU AI Act Focus**: Specialized prompts for compliance
 
-## 🔑 **Como Configurar**
+## 🔑 **How to Configure**
 
-### 1. **Obter Chaves API**
+### 1. **Get API Keys**
 
 ```bash
 # Groq API Key
-# 1. Acesse: https://console.groq.com/keys
-# 2. Crie uma chave (começa com gsk_...)
+# 1. Visit: https://console.groq.com/keys
+# 2. Create a key (starts with gsk_...)
 
 # LangSmith API Key  
-# 1. Acesse: https://smith.langchain.com/
-# 2. Faça login com GitHub (já associado)
-# 3. Vá em Settings > API Keys
-# 4. Copie a chave (começa com ls__...)
+# 1. Visit: https://smith.langchain.com/
+# 2. Login with GitHub (already associated)
+# 3. Go to Settings > API Keys
+# 4. Copy the key (starts with ls__...)
 
-# OpenAI API Key (para embeddings)
-# 1. Acesse: https://platform.openai.com/api-keys
-# 2. Crie uma chave (começa com sk-...)
+# OpenAI API Key (for embeddings)
+# 1. Visit: https://platform.openai.com/api-keys
+# 2. Create a key (starts with sk-...)
 ```
 
-### 2. **Configurar Variáveis de Ambiente**
+### 2. **Configure Environment Variables**
 
 ```bash
-# Configurar chaves
+# Configure keys
 export GROQ_API_KEY="gsk_your_real_groq_key_here"
 export LANGCHAIN_API_KEY="ls__your_real_langsmith_key_here"
 export OPENAI_API_KEY="sk-your_openai_key_here"
 
-# Configurar LangSmith
+# Configure LangSmith
 export LANGCHAIN_PROJECT="groq-eu-ai-act-compliance"
 export LANGCHAIN_TRACING_V2=true
 ```
 
-### 3. **Testar Configuração**
+### 3. **Test Configuration**
 
 ```bash
-# Testar implementação Groq
+# Test Groq implementation
 python3 test_groq_langchain.py
 
-# Iniciar servidor
+# Start server
 uvicorn src.main:app --reload
 
-# Testar API
+# Test API
 python3 test_api_langchain.py
 ```
 
-## 🚀 **Prioridade de LLMs**
+## 🚀 **LLM Priority**
 
-O sistema usa automaticamente:
+The system automatically uses:
 
-1. **🥇 Groq** (se `GROQ_API_KEY` estiver configurada)
-2. **🥈 OpenAI** (se `OPENAI_API_KEY` estiver configurada)
-3. **🥉 Mock** (para desenvolvimento/testes)
+1. **🥇 Groq** (if `GROQ_API_KEY` is configured)
+2. **🥈 OpenAI** (if `OPENAI_API_KEY` is configured)
+3. **🥉 Mock** (for development/testing)
 
-## 📊 **Comparação de Performance**
+## 📊 **Performance Comparison**
 
-| Métrica | Groq | OpenAI | Mock |
+| Metric | Groq | OpenAI | Mock |
 |---------|------|--------|------|
-| Velocidade | 300 tok/s | 50 tok/s | Instantâneo |
-| Custo | $0.10/1M | $1.00/1M | Grátis |
-| Qualidade | Excelente | Excelente | Básica |
-| LangSmith | ✅ Sim | ✅ Sim | ❌ Não |
-| Produção | ✅ Sim | ✅ Sim | ❌ Não |
+| Speed | 300 tok/s | 50 tok/s | Instant |
+| Cost | $0.10/1M | $1.00/1M | Free |
+| Quality | Excellent | Excellent | Basic |
+| LangSmith | ✅ Yes | ✅ Yes | ❌ No |
+| Production | ✅ Yes | ✅ Yes | ❌ No |
 
-## 🌐 **Uso da API**
+## 🌐 **API Usage**
 
-### **Endpoints Disponíveis**
+### **Available Endpoints**
 
 ```bash
 # 1. Login
 curl -X POST "http://localhost:8000/v1/auth/login" \
      -d "username=analyst&password=analyst"
 
-# 2. Setup (detecta Groq automaticamente)
+# 2. Setup (automatically detects Groq)
 curl -X POST "http://localhost:8000/v1/langchain/setup" \
      -H "Authorization: Bearer $JWT_TOKEN"
 
-# 3. Fazer pergunta
+# 3. Ask question
 curl -X POST "http://localhost:8000/v1/langchain/ask" \
      -H "Authorization: Bearer $JWT_TOKEN" \
      -d '{"question": "What are high-risk AI systems?"}'
 ```
 
-## 🔍 **Monitoramento LangSmith**
+## 🔍 **LangSmith Monitoring**
 
-### **Traces Automáticos**
+### **Automatic Traces**
 
-Cada pergunta gera trace com:
-- **Input**: Pergunta do usuário
-- **Output**: Resposta e fontes
-- **Metadata**: Modelo, provider, performance
-- **URL**: Link direto para o trace
+Each question generates trace with:
+- **Input**: User question
+- **Output**: Response and sources
+- **Metadata**: Model, provider, performance
+- **URL**: Direct link to trace
 
-### **Acessar Traces**
+### **Access Traces**
 
-1. Acesse [LangSmith Dashboard](https://smith.langchain.com/)
-2. Vá para projeto "groq-eu-ai-act-compliance"
-3. Veja traces em tempo real
+1. Visit [LangSmith Dashboard](https://smith.langchain.com/)
+2. Go to project "groq-eu-ai-act-compliance"
+3. See traces in real-time
 
-## 🎯 **Benefícios do Groq**
+## 🎯 **Groq Benefits**
 
 ### **Performance**
-- ⚡ **6x mais rápido** que OpenAI
-- 💰 **10x mais barato** que OpenAI
-- 🔓 **Modelos open-source** (Llama, Mixtral)
+- ⚡ **6x faster** than OpenAI
+- 💰 **10x cheaper** than OpenAI
+- 🔓 **Open-source models** (Llama, Mixtral)
 
 ### **Compliance**
-- 🌍 **Sem restrições de dados** (não sai da UE)
+- 🌍 **No data restrictions** (stays in EU)
 - ⚖️ **GDPR-friendly**
-- 🔒 **Modelos transparentes**
+- 🔒 **Transparent models**
 
-### **Desenvolvimento**
-- 🚀 **Inferência ultra-rápida**
-- 📊 **Monitoramento completo**
-- 🛠️ **Fácil integração**
+### **Development**
+- 🚀 **Ultra-fast inference**
+- 📊 **Complete monitoring**
+- 🛠️ **Easy integration**
 
-## 📋 **Próximos Passos**
+## 📋 **Next Steps**
 
-### **Para Usar Agora**
+### **To Use Now**
 
-1. **Configure as chaves API**:
+1. **Configure API keys**:
    ```bash
    export GROQ_API_KEY="gsk_your_key"
    export LANGCHAIN_API_KEY="ls__your_key"
    export OPENAI_API_KEY="sk_your_key"
    ```
 
-2. **Teste a implementação**:
+2. **Test the implementation**:
    ```bash
    python3 test_groq_langchain.py
    ```
 
-3. **Inicie o servidor**:
+3. **Start the server**:
    ```bash
    uvicorn src.main:app --reload
    ```
 
-4. **Acesse a documentação**:
+4. **Access documentation**:
    - API: http://localhost:8000/docs
    - LangSmith: https://smith.langchain.com/
 
-### **Para Produção**
+### **For Production**
 
-1. **Configure variáveis de ambiente** no servidor
-2. **Ajuste prompts** para seu caso de uso específico
-3. **Configure monitoramento** e alertas
-4. **Deploy** com Docker ou cloud provider
+1. **Configure environment variables** on server
+2. **Adjust prompts** for your specific use case
+3. **Configure monitoring** and alerts
+4. **Deploy** with Docker or cloud provider
 
 ## 🆘 **Troubleshooting**
 
-### **Problemas Comuns**
+### **Common Issues**
 
 1. **"Groq API key not found"**
-   - Configure `GROQ_API_KEY` com chave real
+   - Configure `GROQ_API_KEY` with real key
 
 2. **"LangSmith not tracing"**
    - Configure `LANGCHAIN_TRACING_V2=true`
    - Configure `LANGCHAIN_API_KEY`
 
 3. **"Rate limit exceeded"**
-   - Groq tem limites generosos
-   - Verifique uso no console
+   - Groq has generous limits
+   - Check usage in console
 
-### **Verificar Configuração**
+### **Check Configuration**
 
 ```bash
-# Verificar se chaves estão configuradas
+# Check if keys are configured
 echo $GROQ_API_KEY
 echo $LANGCHAIN_API_KEY
 echo $OPENAI_API_KEY
 
-# Testar conectividade Groq
+# Test Groq connectivity
 curl -H "Authorization: Bearer $GROQ_API_KEY" \
      https://api.groq.com/openai/v1/models
 ```
 
-## 🎉 **Conclusão**
+## 🎉 **Conclusion**
 
-**Configuração completa!** Seu sistema agora tem:
+**Setup complete!** Your system now has:
 
-- ✅ **Groq** para inferência ultra-rápida
-- ✅ **LangSmith** para monitoramento completo
-- ✅ **Auto-detecção** de providers
-- ✅ **Foco em EU AI Act** compliance
-- ✅ **API completa** com autenticação
-- ✅ **Testes abrangentes** incluídos
+- ✅ **Groq** for ultra-fast inference
+- ✅ **LangSmith** for complete monitoring
+- ✅ **Auto-detection** of providers
+- ✅ **EU AI Act** compliance focus
+- ✅ **Complete API** with authentication
+- ✅ **Comprehensive tests** included
 
-O sistema está pronto para uso em produção com Groq + LangSmith! 🚀
+The system is ready for production use with Groq + LangSmith! 🚀
