@@ -5,6 +5,7 @@ import re
 import html
 import secrets
 import hashlib
+import time
 from typing import Optional, Dict, Any
 from cryptography.fernet import Fernet
 import logging
@@ -172,7 +173,7 @@ class RateLimiter:
             self.suspicious_ips[ip] = []
         
         self.suspicious_ips[ip].append({
-            "timestamp": os.time(),
+            "timestamp": time.time(),
             "reason": reason
         })
         
@@ -183,7 +184,7 @@ class RateLimiter:
     
     def check_rate_limit(self, ip: str, user_id: str = None) -> Dict[str, Any]:
         """Check rate limit with security monitoring."""
-        current_time = os.time()
+        current_time = time.time()
         
         # Check if IP is blocked
         if self.is_ip_blocked(ip):

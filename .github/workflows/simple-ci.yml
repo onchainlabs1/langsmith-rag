@@ -27,21 +27,17 @@ jobs:
         
     - name: Run basic tests
       run: |
-        # Test if the main modules can be imported
-        python -c "import src.main; print('Main module imports successfully')"
-        python -c "import src.core.security; print('Security module imports successfully')"
-        python -c "import src.api.routes; print('Routes module imports successfully')"
+        # Run simple tests that don't require API keys
+        python -m pytest tests/test_simple.py -v --tb=short
         
     - name: Run security check
       run: |
         python security_check.py || echo "Security check completed with warnings"
         
-    - name: Test API startup
+    - name: Test module imports
       run: |
-        # Test if the API can start without errors
-        timeout 10s python -c "
-        import sys
-        sys.path.append('.')
-        from src.main import app
-        print('FastAPI app created successfully')
-        " || echo "API startup test completed"
+        # Test if core modules can be imported
+        python -c "import src.core.security; print('Security module OK')"
+        python -c "import src.core.auth; print('Auth module OK')"
+        python -c "import src.core.observability; print('Observability module OK')"
+        echo "All core modules imported successfully"
