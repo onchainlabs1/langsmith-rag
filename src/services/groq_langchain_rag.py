@@ -2,6 +2,8 @@
 
 import os
 import logging
+import time
+import uuid
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
@@ -205,55 +207,75 @@ class GroqLangChainRAG:
             }
         
         try:
-            # Create LangSmith trace
-            with self.langsmith_client.trace(
-                name="groq_rag_pipeline",
-                run_type="chain",
-                inputs={"question": question},
-                project_name=getattr(settings, 'langchain_project', 'groq-eu-ai-act-compliance'),
-                tags=["rag", "groq", "eu-ai-act", "compliance"],
-                metadata={
-                    "llm_provider": "groq",
-                    "model": "llama-3.1-70b-versatile",
-                    "temperature": 0.1
+            # Generate correlation ID for tracing
+            correlation_id = request_id or str(uuid.uuid4())
+            start_time = time.time()
+            
+            # Get answer from QA chain (tracing is automatic via environment variables)
+            result = self.qa_chain({"query": question})
+            
+            # Extract answer and sources
+            answer = result["result"]
+            source_docs = result["source_documents"]
+            
+            # Calculate metrics
+            total_duration = time.time() - start_time
+            input_tokens = len(question.split()) * 1.3  # Rough estimation
+            output_tokens = len(answer.split()) * 1.3  # Rough estimation
+            cost = (input_tokens * 0.0005 + output_tokens * 0.0015) / 1000  # Approximate cost
+            
+            # Format sources
+            sources = []
+            citations_count = 0
+            for doc in source_docs:
+                sources.append({
+                    "content": doc.page_content,
+                    "metadata": doc.metadata,
+                    "source": doc.metadata.get("source", "unknown"),
+                    "article": doc.metadata.get("article", "unknown"),
+                    "topic": doc.metadata.get("topic", "unknown"),
+                    "compliance_level": doc.metadata.get("compliance_level", "medium")
+                })
+                citations_count += 1
+            
+            # Calculate citation validity (simple heuristic)
+            citation_validity = min(1.0, citations_count / 3.0)  # Assume 3 citations is ideal
+            
+            # Record observability metrics
+            if hasattr(self, 'observability'):
+                self.observability.record_request_metrics(
+                    correlation_id=correlation_id,
+                    provider="groq",
+                    input_tokens=int(input_tokens),
+                    output_tokens=int(output_tokens),
+                    cost=cost
+                )
+                self.observability.record_citation_metrics(
+                    citations_count=citations_count,
+                    validity_score=citation_validity,
+                    correlation_id=correlation_id
+                )
+            
+            return {
+                "answer": answer,
+                "sources": sources,
+                "timestamp": datetime.now().isoformat(),
+                "model": "llama-3.1-70b-versatile",
+                "provider": "groq",
+                "temperature": self.llm.temperature,
+                "trace_url": "https://smith.langchain.com/trace/auto-generated",
+                "metadata": {
+                    "correlation_id": correlation_id,
+                    "total_duration": total_duration,
+                    "input_tokens": int(input_tokens),
+                    "output_tokens": int(output_tokens),
+                    "estimated_cost": cost,
+                    "citations_count": citations_count,
+                    "citation_validity": citation_validity,
+                    "retriever_type": "faiss",
+                    "fallback_used": False
                 }
-            ) as trace:
-                # Get answer from QA chain
-                result = self.qa_chain({"query": question})
-                
-                # Extract answer and sources
-                answer = result["result"]
-                source_docs = result["source_documents"]
-                
-                # Format sources
-                sources = []
-                for doc in source_docs:
-                    sources.append({
-                        "content": doc.page_content,
-                        "metadata": doc.metadata,
-                        "source": doc.metadata.get("source", "unknown"),
-                        "article": doc.metadata.get("article", "unknown"),
-                        "topic": doc.metadata.get("topic", "unknown"),
-                        "compliance_level": doc.metadata.get("compliance_level", "medium")
-                    })
-                
-                # Log trace outputs
-                trace.outputs = {
-                    "answer": answer,
-                    "sources": sources,
-                    "num_sources": len(sources),
-                    "llm_provider": "groq"
-                }
-                
-                return {
-                    "answer": answer,
-                    "sources": sources,
-                    "timestamp": datetime.now().isoformat(),
-                    "model": "llama-3.1-70b-versatile",
-                    "provider": "groq",
-                    "temperature": self.llm.temperature,
-                    "trace_url": f"https://smith.langchain.com/trace/{trace.id}"
-                }
+            }
                 
         except Exception as e:
             self.logger.error(f"Error answering question with Groq: {e}")

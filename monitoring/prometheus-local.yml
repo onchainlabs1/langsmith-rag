@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # RAG API metrics endpoint (LOCAL - Porta 8001)
+  - job_name: 'rag-api'
+    static_configs:
+      - targets: ['host.docker.internal:8001']  # Para Docker no Mac
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  # Alternative localhost target (backup)
+  - job_name: 'rag-api-localhost'
+    static_configs:
+      - targets: ['localhost:8001']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s

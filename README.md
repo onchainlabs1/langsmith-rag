@@ -1,23 +1,37 @@
-# 🚀 LangSmith RAG - EU AI Act Compliance System
+# 🚀 LangSmith RAG System
 
-[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green.svg)](https://fastapi.tiangolo.com/)
-[![LangChain](https://img.shields.io/badge/LangChain-0.3+-orange.svg)](https://python.langchain.com/)
-[![Groq](https://img.shields.io/badge/Groq-0.23+-purple.svg)](https://groq.com/)
-[![LangSmith](https://img.shields.io/badge/LangSmith-0.3+-red.svg)](https://smith.langchain.com/)
+> **Status: 🚧 In Development** - A comprehensive RAG (Retrieval-Augmented Generation) system with full observability, evaluation, and monitoring capabilities.
 
-> **RAG system specialized in EU AI Act compliance using LangChain, Groq and LangSmith for ultra-fast inference and complete monitoring.**
+## 📋 Overview
 
-## 🌟 Key Features
+This project implements a production-ready RAG system using LangChain, LangSmith, and Groq, featuring comprehensive observability with Prometheus metrics, Grafana dashboards, and automated evaluation pipelines.
 
-- ⚡ **Ultra-Fast Inference**: Groq with ~300 tokens/second (6x faster than OpenAI)
-- 💰 **Cost-Effective**: ~10x cheaper than OpenAI
-- 🔍 **Complete Monitoring**: Automatic traces in LangSmith
-- ⚖️ **Compliance Focus**: Specialized in EU AI Act
-- 🛡️ **Security**: JWT authentication and complete observability
-- 🌍 **EU-Friendly**: No data residency restrictions
-- 📊 **Observability**: Prometheus metrics and Grafana
-- 🔄 **Auto-Detection**: Groq > OpenAI > Mock automatically
+## ✨ Features
+
+### 🔍 **Core RAG Capabilities**
+- **Multi-Provider LLM Support**: OpenAI and Groq integration
+- **Vector Search**: FAISS-based document retrieval
+- **Conversation Memory**: Multiple memory types (Buffer, Summary, Entity, Knowledge Graph)
+- **Streaming Responses**: Real-time response streaming
+- **Document Processing**: PDF, TXT, and web content ingestion
+
+### 📊 **Observability & Monitoring**
+- **Prometheus Metrics**: Request rate, latency, error rates, token usage, costs
+- **Grafana Dashboards**: Real-time visualization of system performance
+- **OpenTelemetry Tracing**: Distributed tracing with LangSmith integration
+- **Custom Metrics**: Citation validity, accuracy scores, fallback usage
+
+### 🧪 **Evaluation & Testing**
+- **LangSmith Evaluations**: Built-in and custom evaluators
+- **Automated Testing**: Comprehensive test suite with CI/CD
+- **Performance Benchmarks**: Latency, accuracy, and cost tracking
+- **A/B Testing**: Compare different configurations
+
+### 🔄 **Production Features**
+- **Docker Support**: Containerized deployment
+- **CI/CD Pipeline**: GitHub Actions with automated testing
+- **Security**: JWT authentication, rate limiting, audit logs
+- **Scalability**: Horizontal scaling with load balancing
 
 ## 🏗️ Architecture
 
@@ -25,240 +39,206 @@
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Streamlit UI  │    │   FastAPI API   │    │   LangSmith     │
 │                 │◄──►│                 │◄──►│   Tracing       │
-│  User Interface │    │  REST Endpoints │    │   Monitoring    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       │                       │
-         ▼                       ▼                       ▼
+                                │
+                                ▼
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Groq LLM      │    │   LangChain     │    │   Vector Store  │
-│                 │◄──►│   RAG Pipeline  │◄──►│   FAISS         │
-│  Ultra-Fast     │    │   Orchestration │    │   Embeddings    │
+│   Prometheus    │    │   RAG Engine    │    │   Vector Store  │
+│   Metrics       │◄───│   (LangChain)   │◄──►│   (FAISS)       │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │
+                                ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Grafana       │    │   Evaluation    │    │   Memory        │
+│   Dashboards    │    │   Pipeline      │    │   Management    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
 ## 🚀 Quick Start
 
-### 1. **Clone the Repository**
+### Prerequisites
+
+- Python 3.11+
+- Docker & Docker Compose
+- OpenAI API Key
+- Groq API Key (optional)
+- LangSmith API Key
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/fabio/langsmith-rag.git
+   cd langsmith-rag
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys
+   ```
+
+4. **Start the monitoring stack**
+   ```bash
+   docker compose -f docker-compose-local.yml up -d
+   ```
+
+5. **Start the RAG API**
+   ```bash
+   python3 rag_mock_api.py
+   ```
+
+6. **Access the applications**
+   - **Streamlit UI**: http://localhost:8501
+   - **FastAPI**: http://localhost:8000
+   - **Grafana**: http://localhost:3000 (admin/admin)
+   - **Prometheus**: http://localhost:9090
+
+## 📊 Monitoring & Observability
+
+### Grafana Dashboards
+
+Access real-time dashboards at http://localhost:3000:
+
+- **RAG System Overview**: Request rates, response times, error rates
+- **Token Usage**: Input/output token consumption
+- **Cost Tracking**: Real-time cost monitoring
+- **Accuracy Metrics**: Citation validity and response quality
+- **System Health**: Service status and performance
+
+### Prometheus Metrics
+
+Available metrics at http://localhost:9090:
+
+- `rag_requests_total`: Total requests by status
+- `rag_request_duration_seconds`: Request latency by stage
+- `rag_tokens_total`: Token usage by type
+- `rag_cost_usd_total`: Cumulative costs
+- `rag_accuracy_score`: Response accuracy (0-1)
+- `rag_citations_per_response`: Citation count distribution
+
+## 🧪 Evaluation
+
+### Running Evaluations
 
 ```bash
-git clone https://github.com/onchainlabs1/langsmith-rag.git
-cd langsmith-rag
+# Run LangSmith evaluations
+python3 evals/run_eval.py
+
+# Run system tests
+python3 test_full_system.py
+
+# Generate test metrics
+python3 generate_test_metrics.py
 ```
 
-### 2. **Install Dependencies**
+### Custom Evaluators
+
+- **Citation Coverage**: Measures citation completeness
+- **Regulatory Scope Match**: EU AI Act compliance
+- **Faithfulness**: Response accuracy to source documents
+- **Correctness**: Factual accuracy
+- **Helpfulness**: User satisfaction metrics
+
+## 🔧 Configuration
+
+### Environment Variables
 
 ```bash
-pip install -r requirements.txt
+# LLM Providers
+OPENAI_API_KEY=your_openai_key
+GROQ_API_KEY=your_groq_key
+
+# LangSmith
+LANGSMITH_API_KEY=your_langsmith_key
+LANGSMITH_PROJECT=ai-act-rag
+
+# Monitoring
+PROMETHEUS_URL=http://localhost:9090
+GRAFANA_URL=http://localhost:3000
 ```
 
-### 3. **Configure API Keys**
+### Docker Configuration
 
-```bash
-# Groq API Key (FREE)
-export GROQ_API_KEY="gsk_your_groq_key_here"
-
-# LangSmith API Key (FREE - 5,000 traces/month)
-export LANGCHAIN_API_KEY="ls__your_langsmith_key_here"
-
-# OpenAI API Key (for embeddings)
-export OPENAI_API_KEY="sk-your_openai_key_here"
-
-# LangSmith Configuration
-export LANGCHAIN_PROJECT="groq-eu-ai-act-compliance"
-export LANGCHAIN_TRACING_V2=true
+```yaml
+# docker-compose-local.yml
+version: '3.8'
+services:
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus-local.yml:/etc/prometheus/prometheus.yml
+  
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
 ```
 
-### 4. **Test Configuration**
-
-```bash
-# Test LangSmith
-python3 test_langsmith_config.py
-
-# Test complete system
-python3 test_groq_langchain.py
-```
-
-### 5. **Start Server**
-
-```bash
-uvicorn src.main:app --reload
-```
-
-### 6. **Access Interface**
-
-- **API Documentation**: http://localhost:8000/docs
-- **Streamlit UI**: `streamlit run ui_app.py`
-- **LangSmith Traces**: https://smith.langchain.com/
-
-## 📋 How to Get API Keys
-
-### **Groq API Key (FREE)**
-1. Visit [console.groq.com/keys](https://console.groq.com/keys)
-2. Login/create account
-3. Click "Create API Key"
-4. Copy the key (starts with `gsk_...`)
-
-### **LangSmith API Key (FREE)**
-1. Visit [smith.langchain.com](https://smith.langchain.com/)
-2. Login with GitHub
-3. Settings > API Keys > Create API Key
-4. Copy the key (starts with `ls__...`)
-
-### **OpenAI API Key**
-1. Visit [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
-2. Create new key
-3. Copy the key (starts with `sk-...`)
-
-## 🧪 Testing
-
-```bash
-# Test LangSmith configuration
-python3 test_langsmith_config.py
-
-# Test Groq system
-python3 test_groq_langchain.py
-
-# Test API endpoints
-python3 test_api_langchain.py
-
-# Test mock (without API keys)
-python3 test_mock_langchain.py
-```
-
-## 🌐 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/v1/langchain/health` | Health check |
-| `POST` | `/v1/langchain/setup` | Initialize RAG system |
-| `POST` | `/v1/langchain/ask` | Ask questions about EU AI Act |
-| `GET` | `/v1/langchain/similar/{query}` | Search similar documents |
-| `GET` | `/v1/langchain/info` | System information |
-| `POST` | `/v1/auth/login` | JWT authentication |
-
-### **Usage Example**
-
-```bash
-# Login
-curl -X POST "http://localhost:8000/v1/auth/login" \
-     -d "username=analyst&password=analyst"
-
-# Setup
-curl -X POST "http://localhost:8000/v1/langchain/setup" \
-     -H "Authorization: Bearer $JWT_TOKEN"
-
-# Ask question
-curl -X POST "http://localhost:8000/v1/langchain/ask" \
-     -H "Content-Type: application/json" \
-     -H "Authorization: Bearer $JWT_TOKEN" \
-     -d '{"question": "What are high-risk AI systems under the EU AI Act?"}'
-```
-
-## 📊 Performance
-
-### **LLM Comparison**
-
-| Metric | Groq | OpenAI | Mock |
-|---------|------|--------|------|
-| Speed | 300 tok/s | 50 tok/s | Instant |
-| Cost | $0.10/1M | $1.00/1M | Free |
-| Quality | Excellent | Excellent | Basic |
-| LangSmith | ✅ | ✅ | ❌ |
-
-### **Groq Benefits**
-
-- ⚡ **6x faster** than OpenAI
-- 💰 **10x cheaper** than OpenAI
-- 🔓 **Open-source models** (Llama, Mixtral)
-- 🌍 **No data restrictions** (stays in EU)
-- ⚖️ **GDPR-friendly**
-
-## 🛠️ Development
-
-### **Project Structure**
+## 📁 Project Structure
 
 ```
 langsmith-rag/
-├── src/
-│   ├── api/                    # API endpoints
-│   ├── app/services/           # Advanced services
-│   ├── core/                   # Configuration and security
-│   ├── services/               # LangChain services
-│   └── main.py                 # FastAPI application
-├── tests/                      # Automated tests
-├── monitoring/                 # Prometheus/Grafana configuration
-├── docs/                       # Documentation
-└── requirements.txt            # Dependencies
+├── src/                          # Source code
+│   ├── api/                      # FastAPI routes
+│   ├── core/                     # Core functionality
+│   │   └── observability.py      # Metrics and tracing
+│   ├── services/                 # Business logic
+│   │   ├── groq_langchain_rag.py # RAG implementation
+│   │   └── vectorstore.py        # Vector operations
+│   └── main.py                   # FastAPI application
+├── evals/                        # Evaluation scripts
+│   ├── datasets/                 # Test datasets
+│   └── run_eval.py              # Evaluation runner
+├── monitoring/                   # Monitoring configuration
+│   ├── grafana/                  # Grafana dashboards
+│   └── prometheus-local.yml      # Prometheus config
+├── ui_app.py                     # Streamlit interface
+├── rag_mock_api.py              # Mock API for testing
+└── requirements.txt              # Dependencies
 ```
 
-### **Development Scripts**
+## 🚧 Development Status
 
-```bash
-# Development
-uvicorn src.main:app --reload
+### ✅ Completed Features
+- [x] Core RAG implementation with LangChain
+- [x] LangSmith tracing integration
+- [x] Prometheus metrics collection
+- [x] Grafana dashboard configuration
+- [x] Docker containerization
+- [x] Basic evaluation framework
+- [x] Streamlit UI interface
 
-# Testing
-pytest tests/
+### 🚧 In Progress
+- [ ] Real-time RAG API deployment
+- [ ] Advanced evaluation metrics
+- [ ] Performance optimization
+- [ ] Security hardening
+- [ ] Load testing
 
-# Linting
-ruff src/
-mypy src/
-
-# Docker
-make docker-build
-make docker-run
-```
-
-## 🐳 Docker
-
-```bash
-# Build
-docker build -t langsmith-rag .
-
-# Run
-docker run -p 8000:8000 \
-  -e GROQ_API_KEY=$GROQ_API_KEY \
-  -e LANGCHAIN_API_KEY=$LANGCHAIN_API_KEY \
-  -e OPENAI_API_KEY=$OPENAI_API_KEY \
-  langsmith-rag
-```
-
-## 📈 Monitoring
-
-### **Prometheus Metrics**
-- Access: http://localhost:8000/metrics
-
-### **Grafana Dashboard**
-- Configuration in `monitoring/grafana/`
-
-### **LangSmith Traces**
-- Access: https://smith.langchain.com/
-- Project: `groq-eu-ai-act-compliance`
-
-## 🔒 Security
-
-- ✅ JWT authentication
-- ✅ Rate limiting
-- ✅ Input validation
-- ✅ Error handling
-- ✅ Complete observability
-- ✅ Structured logs
-
-## 📚 Documentation
-
-- [LangChain Implementation Guide](LANGCHAIN_IMPLEMENTATION_GUIDE.md)
-- [Groq + LangSmith Setup](GROQ_LANGSMITH_SETUP.md)
-- [System Architecture](ARCHITECTURE.md)
-- [Observability](OBSERVABILITY.md)
-- [Security](SECURITY.md)
+### 📋 Planned Features
+- [ ] Multi-tenant support
+- [ ] Advanced caching strategies
+- [ ] Custom model fine-tuning
+- [ ] API rate limiting
+- [ ] Advanced analytics
+- [ ] Mobile app integration
 
 ## 🤝 Contributing
 
-1. Fork the project
-2. Create a branch (`git checkout -b feature/new-feature`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/new-feature`)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ## 📄 License
@@ -267,20 +247,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [LangChain](https://python.langchain.com/) - LLM Framework
-- [Groq](https://groq.com/) - Ultra-fast inference
-- [LangSmith](https://smith.langchain.com/) - Monitoring and tracing
-- [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
-- [Streamlit](https://streamlit.io/) - User interface
+- [LangChain](https://github.com/langchain-ai/langchain) for the RAG framework
+- [LangSmith](https://smith.langchain.com/) for tracing and evaluation
+- [Groq](https://groq.com/) for high-performance inference
+- [Prometheus](https://prometheus.io/) for metrics collection
+- [Grafana](https://grafana.com/) for visualization
 
 ## 📞 Support
 
-- 📧 **Issues**: [GitHub Issues](https://github.com/onchainlabs1/langsmith-rag/issues)
-- 📖 **Documentation**: [Project Wiki](https://github.com/onchainlabs1/langsmith-rag/wiki)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/onchainlabs1/langsmith-rag/discussions)
+For questions and support:
+- Create an issue in this repository
+- Check the [documentation](docs/)
+- Review the [troubleshooting guide](docs/troubleshooting.md)
 
 ---
 
-**Developed with ❤️ for EU AI Act compliance**
-
-⭐ **If this project was useful, consider giving it a star!**
+**Status**: 🚧 In Development | **Last Updated**: January 2025 | **Version**: 0.1.0

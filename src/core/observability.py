@@ -31,7 +31,7 @@ class ObservabilityService:
         self.tracer = trace.get_tracer(__name__)
         self.meter = metrics.get_meter(__name__)
         
-        # Custom metrics
+        # Request metrics
         self.request_counter = self.meter.create_counter(
             name="rag_requests_total",
             description="Total number of RAG requests",
@@ -44,10 +44,70 @@ class ObservabilityService:
             unit="s"
         )
         
+        # Stage-specific metrics
         self.retrieval_duration = self.meter.create_histogram(
             name="rag_retrieval_duration_seconds", 
             description="Duration of document retrieval in seconds",
             unit="s"
+        )
+        
+        self.generation_duration = self.meter.create_histogram(
+            name="rag_generation_duration_seconds",
+            description="Duration of answer generation in seconds", 
+            unit="s"
+        )
+        
+        self.postprocess_duration = self.meter.create_histogram(
+            name="rag_postprocess_duration_seconds",
+            description="Duration of post-processing in seconds",
+            unit="s"
+        )
+        
+        # Error metrics
+        self.error_counter = self.meter.create_counter(
+            name="rag_errors_total",
+            description="Total number of RAG errors",
+            unit="1"
+        )
+        
+        # Fallback metrics
+        self.fallback_counter = self.meter.create_counter(
+            name="rag_fallback_usage_total",
+            description="Total number of fallback provider usages",
+            unit="1"
+        )
+        
+        # Token metrics
+        self.input_tokens = self.meter.create_counter(
+            name="rag_input_tokens_total",
+            description="Total input tokens consumed",
+            unit="1"
+        )
+        
+        self.output_tokens = self.meter.create_counter(
+            name="rag_output_tokens_total", 
+            description="Total output tokens generated",
+            unit="1"
+        )
+        
+        # Cost metrics (approximate)
+        self.cost_counter = self.meter.create_counter(
+            name="rag_cost_usd_total",
+            description="Total estimated cost in USD",
+            unit="1"
+        )
+        
+        # Citation metrics
+        self.citation_validity = self.meter.create_histogram(
+            name="rag_citation_validity_score",
+            description="Citation validity score (0-1)",
+            unit="1"
+        )
+        
+        self.citations_per_response = self.meter.create_histogram(
+            name="rag_citations_per_response",
+            description="Number of citations per response",
+            unit="1"
         )
         
         self.llm_duration = self.meter.create_histogram(
@@ -237,6 +297,64 @@ class ObservabilityService:
         """Record evaluation metrics."""
         self.record_groundedness(groundedness, request_id)
         self.record_correctness(correctness, request_id)
+    
+    def record_request_metrics(self, correlation_id: str, provider: str, input_tokens: int, output_tokens: int, cost: float):
+        """Record request-level metrics."""
+        self.request_counter.add(1, {"provider": provider, "correlation_id": correlation_id})
+        self.input_tokens.add(input_tokens, {"provider": provider})
+        self.output_tokens.add(output_tokens, {"provider": provider})
+        self.cost_counter.add(cost, {"provider": provider})
+    
+    def record_error(self, error_type: str, correlation_id: str):
+        """Record error metrics."""
+        self.error_counter.add(1, {"error_type": error_type, "correlation_id": correlation_id})
+    
+    def record_fallback_usage(self, primary_provider: str, fallback_provider: str, correlation_id: str):
+        """Record fallback provider usage."""
+        self.fallback_counter.add(1, {
+            "primary_provider": primary_provider,
+            "fallback_provider": fallback_provider,
+            "correlation_id": correlation_id
+        })
+    
+    def record_citation_metrics(self, citations_count: int, validity_score: float, correlation_id: str):
+        """Record citation-related metrics."""
+        self.citations_per_response.record(citations_count)
+        self.citation_validity.record(validity_score)
+    
+    @contextmanager
+    def trace_generation(self, correlation_id: str, provider: str, model: str):
+        """Trace answer generation stage with enhanced metrics."""
+        with self.tracer.start_as_current_span("rag.generation") as span:
+            span.set_attributes({
+                "correlation_id": correlation_id,
+                "stage": "generation",
+                "provider": provider,
+                "model": model
+            })
+            start_time = time.time()
+            try:
+                yield span
+            finally:
+                duration = time.time() - start_time
+                self.generation_duration.record(duration)
+                span.set_attribute("duration", duration)
+    
+    @contextmanager
+    def trace_postprocess(self, correlation_id: str):
+        """Trace post-processing stage."""
+        with self.tracer.start_as_current_span("rag.postprocess") as span:
+            span.set_attributes({
+                "correlation_id": correlation_id,
+                "stage": "postprocess"
+            })
+            start_time = time.time()
+            try:
+                yield span
+            finally:
+                duration = time.time() - start_time
+                self.postprocess_duration.record(duration)
+                span.set_attribute("duration", duration)
     
     def setup_logging(self) -> None:
         """Setup structured logging."""

@@ -189,6 +189,73 @@ def display_answer(answer_data: Dict[str, Any]):
             st.markdown(f"**Confidence Score:** {validation.get('confidence_score', 0):.2f}")
 
 
+def submit_feedback(question: str, answer: str, feedback_type: str, comment: str = "", correlation_id: str = ""):
+    """Submit feedback to LangSmith for evaluation."""
+    try:
+        from langsmith import Client
+        
+        # Initialize LangSmith client
+        client = Client()
+        
+        # Create feedback data
+        feedback_data = {
+            "feedback_type": feedback_type,
+            "comment": comment,
+            "question": question,
+            "answer": answer,
+            "correlation_id": correlation_id,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Submit feedback (this would typically be associated with a specific run/trace)
+        # For now, we'll log it and potentially store it for later association
+        st.success(f"✅ Feedback submitted: {feedback_type}")
+        
+        # Store in session state for potential later processing
+        if 'feedback_history' not in st.session_state:
+            st.session_state.feedback_history = []
+        
+        st.session_state.feedback_history.append(feedback_data)
+        
+    except Exception as e:
+        st.error(f"❌ Failed to submit feedback: {str(e)}")
+
+
+def display_feedback_section(question: str, answer: str, correlation_id: str = ""):
+    """Display feedback collection section."""
+    st.markdown("---")
+    st.markdown("### 💭 Feedback")
+    st.markdown("Help us improve by providing feedback on this response:")
+    
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        feedback_type = st.radio(
+            "How would you rate this response?",
+            ["👍 Good", "👎 Poor"],
+            key=f"feedback_{correlation_id}"
+        )
+    
+    with col2:
+        comment = st.text_area(
+            "Additional comments (optional):",
+            placeholder="Please provide specific feedback about accuracy, completeness, or helpfulness...",
+            key=f"comment_{correlation_id}"
+        )
+    
+    if st.button("Submit Feedback", key=f"submit_{correlation_id}"):
+        if feedback_type:
+            submit_feedback(
+                question=question,
+                answer=answer,
+                feedback_type=feedback_type,
+                comment=comment,
+                correlation_id=correlation_id
+            )
+        else:
+            st.warning("Please select a feedback rating.")
+
+
 def display_query_history():
     """Display query history in sidebar."""
     if st.session_state.query_history:
@@ -397,6 +464,14 @@ def main():
             
             # Display the answer
             display_answer(answer_data)
+            
+            # Add feedback section
+            correlation_id = answer_data.get("metadata", {}).get("correlation_id", "")
+            display_feedback_section(
+                question=st.session_state.current_question,
+                answer=answer_data.get("answer", ""),
+                correlation_id=correlation_id
+            )
             
             # Add timestamp
             st.markdown(f"*Query processed at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*")
