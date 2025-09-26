@@ -14,6 +14,7 @@ from src.api.langchain_routes import router as langchain_router
 from src.core import settings, setup_logging
 from src.core.observability import setup_observability
 from src.core.rate_limiter import rate_limit_middleware
+from src.core.middleware import SecurityMiddleware, RequestLoggingMiddleware, CORSMiddleware as SecureCORSMiddleware
 
 
 @asynccontextmanager
@@ -60,13 +61,18 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Add CORS middleware
+# Add security middleware (order matters!)
+app.add_middleware(SecurityMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
+
+# Add secure CORS middleware
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    SecureCORSMiddleware,
+    allowed_origins=[
+        "http://localhost:3000",  # Grafana
+        "http://localhost:8501",  # Streamlit
+        "http://localhost:8000",  # API
+    ]
 )
 
 # Add rate limiting middleware

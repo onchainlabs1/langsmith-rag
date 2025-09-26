@@ -39,7 +39,7 @@
 ```bash
 # Configure keys
 export GROQ_API_KEY="gsk_your_real_groq_key_here"
-export LANGCHAIN_API_KEY="ls__your_real_langsmith_key_here"
+export LANGCHAIN_API_KEY="your_langsmith_api_key_here"
 export OPENAI_API_KEY="sk-your_openai_key_here"
 
 # Configure LangSmith

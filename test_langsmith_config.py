@@ -92,7 +92,7 @@ def show_setup_instructions():
     print("   - Copy the key (starts with ls__...)")
     
     print("\n2. ⚙️ Configure Environment:")
-    print("   export LANGCHAIN_API_KEY='ls__your_key_here'")
+    print("   export LANGCHAIN_API_KEY='your_langsmith_api_key_here'")
     print("   export LANGCHAIN_PROJECT='groq-eu-ai-act-compliance'")
     print("   export LANGCHAIN_TRACING_V2='true'")
     

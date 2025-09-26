@@ -27,7 +27,7 @@ This guide shows how to configure Groq with LangSmith for your EU AI Act complia
 export GROQ_API_KEY="gsk_your_real_groq_key_here"
 
 # LangSmith API Key
-export LANGCHAIN_API_KEY="ls__your_real_langsmith_key_here"
+export LANGCHAIN_API_KEY="your_langsmith_api_key_here"
 
 # OpenAI API Key (for embeddings - still needed)
 export OPENAI_API_KEY="sk-your_openai_key_here"
