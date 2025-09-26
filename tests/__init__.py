@@ -1,1 +1,1 @@
-"""Test package for LangSmith Demo."""
+"""Test package for LangSmith RAG System."""
